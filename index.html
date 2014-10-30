@@ -50,6 +50,11 @@
     {
         font-size: 200pt;
     }
+    span.remove
+    {
+        position: absolute;
+        right: 0;
+    }
     </style>
     <body>
         <div id="options">
@@ -58,8 +63,7 @@
             <div class="button" id="stop">Stop</div>
             <hr>
             <ul id="intervals">
-                <li>00:03</li>
-                <li>00:10</li>
+                <li>00:10<span class="remove">x</span></li>
             </ul>
         </div>
         <div id="timer">

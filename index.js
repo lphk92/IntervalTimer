@@ -95,8 +95,22 @@ function begin()
     }, 10)
 }
 
-document.getElementById("start").onclick= function() { begin() };
+document.getElementById("add-interval").onclick = function() {
+    var newInterval = prompt("Enter your new interval");
+    var ul = document.getElementById("intervals");
+    var li = document.createElement("li");
+    li.innerHTML = newInterval + "<span class=\"remove\">x</span>";
+    ul.appendChild(li);
+};
+
+document.getElementById("start").onclick = function() { begin() };
+
 var intervalList = document.getElementById("intervals");
 var sortable = new Sortable(intervalList, {
-    animation: 150
+    animation: 150,
+    filter: ".remove",
+    onFilter: function (evt) {
+        var el = sortable.closest(evt.item);
+        el && el.parentNode.removeChild(el);
+    }
 });

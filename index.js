@@ -24,6 +24,62 @@ function getIntervals()
     return arr;
 }
 
+function incrementSelection()
+{
+    var items = document.getElementsByTagName("li");
+    var found = false;
+    for (var i = 0 ; i < items.length ; i++)
+    {
+        if (items[i].classList.contains("selected"))
+        {
+            found = true;
+            if (i < items.length-1)
+            {
+                items[i].classList.remove("selected");
+                items[i+1].classList.add("selected");
+                break;
+            }
+        }
+    }
+    if (!found)
+    {
+        document.getElementsByTagName("li")[0].classList.add("selected");
+    }
+}
+
+function setRunning(isRunning)
+{
+    if (isRunning)
+    {
+        // Select the first interval
+        incrementSelection();
+
+        // Hide the x's
+        var items = document.getElementsByClassName("remove");
+        for (var i = 0 ; i < items.length ; i++)
+        {
+            items[i].classList.add("hidden");
+        }
+    }
+    else
+    {
+        // Clear any selected intervals (should only be one)
+        var items = document.getElementsByTagName("li");
+        for (var i = 0 ; i < items.length ; i++)
+        {
+            if (items[i].classList.contains("selected"))
+                items[i].classList.remove("selected");
+        }
+
+        // Restore the x's
+        var items = document.getElementsByClassName("remove");
+        for (var i = 0 ; i < items.length ; i++)
+        {
+            items[i].classList.remove("hidden");
+        }
+    }
+}
+
 function formatDate(date)
 {
     var min = date.getMinutes();
@@ -61,6 +117,7 @@ function begin()
     var hasBegun = false;
     var interval, intervalStart, intervalEnd;
 
+    setRunning(true);
     var loop = setInterval(function() {
         if (hasBegun == true || intervalArray.length > 0)
         {
@@ -86,6 +143,7 @@ function begin()
             {
                 // The interval has elapsed
                 beep.play();
+                incrementSelection();
                 hasBegun = false;
             }
         }
@@ -94,6 +152,7 @@ function begin()
             // When we run out of intervals, stop
             updateTime(new Date(0));
             clearInterval(loop);
+            setRunning(false);
         }
     }, 10)
 }
@@ -107,6 +166,9 @@ document.getElementById("add-interval").onclick = function() {
 };
 
 document.getElementById("start").onclick = function() { begin() };
+document.getElementById("stop").onclick = function() {
+    //TODO: stop
+};
 
 var intervalList = document.getElementById("intervals");
 var sortable = new Sortable(intervalList, {

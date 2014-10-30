@@ -4,6 +4,24 @@ function Interval(m, s)
     this.seconds = s;
 }
 
+function parseInterval(str)
+{
+    var min = str.split(":")[0];
+    var sec = str.split(":")[1];
+    return new Interval(parseInt(min), parseInt(sec));
+}
+
+function getIntervals()
+{
+    var items = document.getElementsByTagName("li");
+    var arr = [];
+    for (var i = 0 ; i < items.length ; i++)
+    {
+        arr.push(parseInterval(items[i].innerHTML));
+    }
+    return arr;
+}
+
 function formatDate(date)
 {
     var min = date.getMinutes();
@@ -36,9 +54,7 @@ function updateTime(date)
 
 function begin()
 {
-    var intervalArray = [];
-    intervalArray.push(new Interval(0, 3));
-    intervalArray.push(new Interval(0, 10));
+    var intervalArray = getIntervals();
 
     var hasBegun = false;
     var interval, intervalStart, intervalEnd;
@@ -79,4 +95,8 @@ function begin()
     }, 10)
 }
 
-document.getElementById("begin").onclick= function() { begin() };
+document.getElementById("start").onclick= function() { begin() };
+var intervalList = document.getElementById("intervals");
+var sortable = new Sortable(intervalList, {
+    animation: 150
+});

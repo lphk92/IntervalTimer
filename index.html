@@ -26,15 +26,17 @@
         padding: 0;
         margin: 0;
     }
-    div.interval
+    ul
+    {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+    li
     {
         font-family: courier;
         text-align: center;
         padding: 10px;
-    }
-    div.interval:hover
-    {
-        background-color: lightgray;
     }
     div#timer
     {
@@ -52,14 +54,18 @@
     <body>
         <div id="options">
             <div class="button" id="add-interval">Add Interval</div>
-            <div class="button" id="begin">Start!</div>
+            <div class="button" id="start">Start</div>
+            <div class="button" id="stop">Stop</div>
             <hr>
-            <div class="interval">03:00</div>
-            <div class="interval">10:00</div>
+            <ul id="intervals">
+                <li>00:03</li>
+                <li>00:10</li>
+            </ul>
         </div>
         <div id="timer">
             <span id="time">00:00:00</span>
         </div>
     </body>
+    <script src="lib/Sortable.js"></script>
     <script src="index.js"></script>
 <html>

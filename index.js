@@ -1,3 +1,5 @@
+var beep = new Audio('beep.wav');
+
 function Interval(m, s)
 {
     this.minutes = m;
@@ -83,6 +85,7 @@ function begin()
             else
             {
                 // The interval has elapsed
+                beep.play();
                 hasBegun = false;
             }
         }

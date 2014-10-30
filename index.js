@@ -1,3 +1,9 @@
+function Interval(m, s)
+{
+    this.minutes = m;
+    this.seconds = s;
+}
+
 function formatDate(date)
 {
     var min = date.getMinutes();
@@ -28,34 +34,49 @@ function updateTime(date)
     document.getElementById("time").innerHTML = formatDate(date);
 }
 
-var intervalMin = 0;
-var intervalSec = 15;
+function begin()
+{
+    var intervalArray = [];
+    intervalArray.push(new Interval(0, 3));
+    intervalArray.push(new Interval(0, 10));
 
-var hasBegun = false;
-var intervalStart = (new Date()).getTime();
-var intervalEnd = intervalStart + intervalMin * 60 * 1000 + intervalSec * 1000;
+    var hasBegun = false;
+    var interval, intervalStart, intervalEnd;
 
-var loop = setInterval(function() {
+    var loop = setInterval(function() {
+        if (hasBegun == true || intervalArray.length > 0)
+        {
+            // It has begun
+            if (hasBegun == false)
+            {
+                hasBegun = true;
+                interval = intervalArray.shift();
+                intervalStart = (new Date()).getTime();
+                intervalEnd = intervalStart +
+                            interval.minutes * 60 * 1000 +
+                            interval.seconds * 1000;
+            }
 
-    // It has begun
-    if (hasBegun = false)
-    {
-        hasBegun = true;
-        intervalStart = new Date();
-    }
-    
-    var date = new Date(); 
-    var diff = intervalEnd - date.getTime();
-    if (diff > 0)
-    {
-        // We still have some time to go;
-        updateTime(new Date(diff))
-    }
-    else
-    {
-        // The interval has elapsed
-        hasBegun = false;
-        updateTime(new Date(0));
-        clearInterval(loop);
-    }
-}, 10)
+            var date = new Date();
+            var diff = intervalEnd - date.getTime();
+            if (diff > 0)
+            {
+                // We still have some time to go;
+                updateTime(new Date(diff))
+            }
+            else
+            {
+                // The interval has elapsed
+                hasBegun = false;
+            }
+        }
+        else
+        {
+            // When we run out of intervals, stop
+            updateTime(new Date(0));
+            clearInterval(loop);
+        }
+    }, 10)
+}
+
+document.getElementById("begin").onclick= function() { begin() };

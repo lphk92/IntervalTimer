@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-    <script src="index.js"></script>
     <style>
     body
     {
@@ -26,7 +25,16 @@
         height: 100%;
         padding: 0;
         margin: 0;
-        border: 1px solid black;
+    }
+    div.interval
+    {
+        font-family: courier;
+        text-align: center;
+        padding: 10px;
+    }
+    div.interval:hover
+    {
+        background-color: lightgray;
     }
     div#timer
     {
@@ -44,10 +52,14 @@
     <body>
         <div id="options">
             <div class="button" id="add-interval">Add Interval</div>
-            <div class="button" id="add-break">Add Break</div>
+            <div class="button" id="begin">Start!</div>
+            <hr>
+            <div class="interval">03:00</div>
+            <div class="interval">10:00</div>
         </div>
         <div id="timer">
             <span id="time">00:00:00</span>
         </div>
     </body>
+    <script src="index.js"></script>
 <html>

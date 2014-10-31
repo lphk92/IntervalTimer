@@ -1,4 +1,5 @@
 var beep = new Audio('beep.wav');
+var stop = false
 
 function Interval(m, s)
 {
@@ -77,6 +78,9 @@ function setRunning(isRunning)
         {
             items[i].classList.remove("hidden");
         }
+
+        // Clear stop flag
+        stop = false;
     }
 }
 
@@ -119,7 +123,7 @@ function begin()
 
     setRunning(true);
     var loop = setInterval(function() {
-        if (hasBegun == true || intervalArray.length > 0)
+        if (!stop && (hasBegun == true || intervalArray.length > 0))
         {
             // It has begun
             if (hasBegun == false)
@@ -168,6 +172,7 @@ document.getElementById("add-interval").onclick = function() {
 document.getElementById("start").onclick = function() { begin() };
 document.getElementById("stop").onclick = function() {
     //TODO: stop
+    stop = true;
 };
 
 var intervalList = document.getElementById("intervals");

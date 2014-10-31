@@ -1,5 +1,6 @@
 var beep = new Audio('beep.wav');
 var stop = false
+var pause = false
 
 function Interval(m, s)
 {
@@ -61,6 +62,12 @@ function setRunning(isRunning)
         {
             items[i].classList.add("hidden");
         }
+
+        // Show stop button
+        document.getElementById("start").classList.add("hidden");
+        document.getElementById("pause").classList.remove("hidden");
+        document.getElementById("resume").classList.add("hidden");
+        document.getElementById("stop").classList.remove("hidden");
     }
     else
     {
@@ -81,6 +88,12 @@ function setRunning(isRunning)
 
         // Clear stop flag
         stop = false;
+
+        // Hide stop button
+        document.getElementById("start").classList.remove("hidden");
+        document.getElementById("pause").classList.add("hidden");
+        document.getElementById("resume").classList.add("hidden");
+        document.getElementById("stop").classList.add("hidden");
     }
 }
 
@@ -119,44 +132,58 @@ function begin()
     var intervalArray = getIntervals();
 
     var hasBegun = false;
-    var interval, intervalStart, intervalEnd;
+    var wasPaused = false;
+    var interval, intervalStart, intervalEnd, diff;
 
     setRunning(true);
     var loop = setInterval(function() {
-        if (!stop && (hasBegun == true || intervalArray.length > 0))
+        if (!pause)
         {
-            // It has begun
-            if (hasBegun == false)
+            if (!stop && (hasBegun == true || intervalArray.length > 0))
             {
-                hasBegun = true;
-                interval = intervalArray.shift();
-                intervalStart = (new Date()).getTime();
-                intervalEnd = intervalStart +
-                            interval.minutes * 60 * 1000 +
-                            interval.seconds * 1000;
-            }
+                // It has begun
+                if (hasBegun == false)
+                {
+                    hasBegun = true;
+                    interval = intervalArray.shift();
+                    intervalStart = (new Date()).getTime();
+                    intervalEnd = intervalStart +
+                                interval.minutes * 60 * 1000 +
+                                interval.seconds * 1000;
+                }
 
-            var date = new Date();
-            var diff = intervalEnd - date.getTime();
-            if (diff > 0)
-            {
-                // We still have some time to go;
-                updateTime(new Date(diff))
+                if (wasPaused)
+                {
+                    wasPaused = false;
+                    intervalEnd = (new Date()).getTime() + diff;
+                }
+
+                var date = new Date();
+                diff = intervalEnd - date.getTime();
+                if (diff > 0)
+                {
+                    // We still have some time to go;
+                    updateTime(new Date(diff))
+                }
+                else
+                {
+                    // The interval has elapsed
+                    beep.play();
+                    incrementSelection();
+                    hasBegun = false;
+                }
             }
             else
             {
-                // The interval has elapsed
-                beep.play();
-                incrementSelection();
-                hasBegun = false;
+                // When we run out of intervals, stop
+                updateTime(new Date(0));
+                clearInterval(loop);
+                setRunning(false);
             }
         }
         else
         {
-            // When we run out of intervals, stop
-            updateTime(new Date(0));
-            clearInterval(loop);
-            setRunning(false);
+            wasPaused = true;
         }
     }, 10)
 }
@@ -170,10 +197,17 @@ document.getElementById("add-interval").onclick = function() {
 };
 
 document.getElementById("start").onclick = function() { begin() };
-document.getElementById("stop").onclick = function() {
-    //TODO: stop
-    stop = true;
+document.getElementById("pause").onclick = function() {
+    document.getElementById("pause").classList.add("hidden");
+    document.getElementById("resume").classList.remove("hidden");
+    pause = true
 };
+document.getElementById("resume").onclick = function() {
+    document.getElementById("pause").classList.remove("hidden");
+    document.getElementById("resume").classList.add("hidden");
+    pause = false;
+};
+document.getElementById("stop").onclick = function() { pause = false; stop = true };
 
 var intervalList = document.getElementById("intervals");
 var sortable = new Sortable(intervalList, {

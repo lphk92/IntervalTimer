@@ -9,7 +9,7 @@
     {
         display: none;
     }
-    div.button
+    div.button:not(.hidden)
     {
         padding: 10px;
         text-align: center;
@@ -69,7 +69,9 @@
         <div id="options">
             <div class="button" id="add-interval">Add Interval</div>
             <div class="button" id="start">Start</div>
-            <div class="button" id="stop">Stop</div>
+            <div class="button hidden" id="pause">Pause</div>
+            <div class="button hidden" id="resume">Resume</div>
+            <div class="button hidden" id="stop">Stop</div>
             <hr>
             <ul id="intervals">
                 <li>00:10<span class="remove">x</span></li>

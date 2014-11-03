@@ -8,6 +8,30 @@ function Interval(m, s)
     this.seconds = s;
 }
 
+function storeIntervals()
+{
+    //alert("Storing");
+    var intervals = getIntervalStrings();
+    var list = intervals.join("-");
+    localStorage["interval_list"] = list;
+}
+
+function restoreIntervals()
+{
+    var list = localStorage["interval_list"];
+    intervals = list.split("-");
+    for (var i = 0 ; i < intervals.length ; i++)
+        addInterval(intervals[i]);
+}
+
+function addInterval(intervalString)
+{
+    var ul = document.getElementById("intervals");
+    var li = document.createElement("li");
+    li.innerHTML = intervalString + "<span class=\"remove\">x</span>";
+    ul.appendChild(li);
+}
+
 function parseInterval(str)
 {
     var min = str.split(":")[0];
@@ -15,13 +39,23 @@ function parseInterval(str)
     return new Interval(parseInt(min), parseInt(sec));
 }
 
+function getIntervalStrings()
+{
+    var items = document.getElementsByTagName("li");
+    var arr = [];
+    for (var i = 0 ; i < items.length ; i++)
+    {
+        arr.push(items[i].firstChild.textContent);
+    }
+    return arr;
+}
 function getIntervals()
 {
     var items = document.getElementsByTagName("li");
     var arr = [];
     for (var i = 0 ; i < items.length ; i++)
     {
-        arr.push(parseInterval(items[i].innerHTML));
+        arr.push(parseInterval(items[i].firstChild.textContent));
     }
     return arr;
 }
@@ -190,10 +224,8 @@ function begin()
 
 document.getElementById("add-interval").onclick = function() {
     var newInterval = prompt("Enter your new interval");
-    var ul = document.getElementById("intervals");
-    var li = document.createElement("li");
-    li.innerHTML = newInterval + "<span class=\"remove\">x</span>";
-    ul.appendChild(li);
+    addInterval(newInterval);
+    storeIntervals();
 };
 
 document.getElementById("start").onclick = function() { begin() };
@@ -216,5 +248,8 @@ var sortable = new Sortable(intervalList, {
     onFilter: function (evt) {
         var el = sortable.closest(evt.item);
         el && el.parentNode.removeChild(el);
+        storeIntervals();
     }
 });
+
+restoreIntervals();
